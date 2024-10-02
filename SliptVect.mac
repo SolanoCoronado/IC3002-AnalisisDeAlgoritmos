@@ -1,0 +1,24 @@
+/* Tarea 01  Wxmaxima */
+/*Estudiantes: Gabriel Solano Coronado 2019033687    y Emily Sanchez Orozco 2021067314 */
+
+
+/* Función para contar las veces que aparece un elemento en la lista */
+contar(elem, lista) := if lista = [] then 0
+    else if first(lista) = elem then 1 + contar(elem, rest(lista))
+        else contar(elem, rest(lista)
+);
+
+/* Función para construir la lista de frecuencias */
+freq_aux(lista, res) := block(
+    [elem, freq_elem],
+    if lista = [] then res
+    else (
+        elem: first(lista),
+        freq_elem: [elem, contar(elem, lista)],
+        lista_sin_elem: sublist(lista, lambda([x], x # elem)),
+        freq_aux(lista_sin_elem, cons(freq_elem, res))
+    )
+);
+
+/* Función principal */
+freq(lista) := reverse(freq_aux(lista, []));

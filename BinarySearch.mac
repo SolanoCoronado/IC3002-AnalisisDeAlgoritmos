@@ -1,0 +1,88 @@
+/*
+Gabriel Solano Coronado 2019033687  
+Emily Sánchez Orozco 2021067314
+*/
+
+
+bsearch(num,vec):=block(
+
+first:1,
+final:length(vec),
+res:false,
+
+while first<=final do(
+		mid:ceiling((first+final)/2),
+		print("lista", first, final, "m:", mid),
+		print (vec),
+		if num = vec[mid] then(
+			res:mid,
+			return(res)
+		)else if num< vec[mid] then (
+			final:mid-1
+		)else(
+			first:mid+1
+		)
+	),
+	return(res)
+
+);
+
+/*Calculo de T(n) y Big OH */
+
+/*
+
+bsearch(num, vec):=block ....................................T(n) = 4 + T(log n)
+es O(log n)
+(
+    first:1, ................................................ 1
+    final:length(vec), ...................................... 1
+    res:false, .............................................. 1
+
+    while first<=final do ................................... T(log n)
+    (
+        mid:ceiling((first+final)/2), ............... 1
+        print("lista", first, final, "m:", mid), .... 1
+        print(vec), ................................. 1
+        if num = vec[mid] then ...................... 1
+        (
+            res:mid, ................................ 1
+            return(res) ............................. 1
+        )
+        else if num < vec[mid] then ................. 1
+        (
+            final:mid-1 ............................. 1
+        )
+        else ........................................ 1
+        (
+            first:mid+1 ............................. 1
+        )
+    ),
+    return(res) ............................................. 1
+);
+
+
+T(0) = 1
+T(n) =  4 + T(log n)
+
+Entonces:
+Big Oh = O(log n)
+
+*/
+
+/* Impresiones de las pruebas */
+
+vec10: [2,5,8,12,16,23,38,56,72,91];
+print(vec10);
+print(" ");
+
+print("Prueba con num=2");
+print(bsearch(2,vec10));
+print(" ");
+
+print("Prueba con num=23");
+print(bsearch(23,vec10));
+print(" ");
+
+print("Prueba con num=25");
+print(bsearch(25,vec10));
+print(" ");

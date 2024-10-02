@@ -1,0 +1,118 @@
+/*
+Gabriel Solano Coronado 2019033687  
+Emily Sánchez Orozco 2021067314
+*/
+
+/* Método para insertar un elemento en el heap usando heapify */
+insertHeap(ele, lista) := block(
+    local(newHeap, i),
+    newHeap: append(lista, [ele]),
+    i: length(newHeap),
+    while i > 1 and newHeap[i] > newHeap[floor(i / 2)] do (
+        temp : newHeap[i],
+        newHeap[i] : newHeap[floor(i / 2)],
+        newHeap[floor(i / 2)] : temp,
+        i : floor(i / 2)
+    ),
+    return(newHeap)
+);
+
+/* Método para eliminar el máximo del heap */
+deleteHeap(lista) := block(
+    if length(lista) = 0 then [] 
+    else (
+        maximo : first(lista), 
+        lista : subst([lista[1], lista[length(lista)]], [lista[length(lista)], lista[1]], lista), 
+        lista : rest(lista), 
+        i : 1,
+        while 2*i <= length(lista) do ( 
+            left : 2*i, 
+            right : 2*i + 1,
+            largest : i,
+            if left <= length(lista) and lista[left] > lista[largest] then largest : left, 
+            if right <= length(lista) and lista[right] > lista[largest] then largest : right,
+            if largest # i then ( 
+                temp : lista[i],
+                lista[i] : lista[largest],
+                lista[largest] : temp,
+                i : largest
+            ) else i : length(lista) + 1 
+        ),
+        [maximo, lista] 
+    )
+);
+
+/* Método principal heapSort */
+heapSort(lista) := block(
+    heap : [], 
+    m : 1,      
+    l : length(lista),
+	print(heap),
+    while m <= l do (
+        ele : lista[m],
+        heap : insertHeap(ele, heap),
+		print(heap),
+        m : m + 1  
+    ),
+	print("____________________________________"),
+	temp : [],
+    n : 1,
+    while n <= length(lista) do (
+        temp : deleteHeap(heap),
+		heap : temp[2],
+		print(temp),
+		n : n + 1
+    ),
+	heap
+);
+
+print("Prueba insertHeap");
+print(insertHeap(15,[]));
+print(" ");
+
+print(insertHeap(20,[15]));
+print(" ");
+
+print(insertHeap(10,[20,15]));
+print(" ");
+
+print(insertHeap(8,[20,15,10]));
+print(" ");
+
+print(insertHeap(50,[20,15,10,8]));
+print(" ");
+
+print(insertHeap(16,[50,20,10,8,15]));
+print(" ");
+
+print(insertHeap(30,[50,20,16,8,15,10]));
+print(" ");
+
+print("___________________________________________________________ ");
+
+print("Prueba deleteHeap");
+print(deleteHeap([50,30,20,15,10,8,16]));
+print(" ");
+
+print(deleteHeap([30,16,20,15,10,8]));
+print(" ");
+
+print(deleteHeap([20,16,8,15,10]));
+print(" ");
+
+print(deleteHeap([16,15,8,10]));
+print(" ");
+
+print(deleteHeap([15,10,8]));
+print(" ");
+
+print(deleteHeap([10,8]));
+print(" ");
+
+print(deleteHeap([8]));
+print(" ");
+
+print("___________________________________________________________ ");
+
+print("Prueba HeapSort");
+print(heapSort([15,20,10,8,50,16,30]));

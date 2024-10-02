@@ -1,0 +1,123 @@
+/*
+Gabriel Solano Coronado 2019033687  
+Emily Sánchez Orozco 2021067314
+*/
+vecinos(n, nRow) := block(
+    [result, nextRow, nList],
+    nextRow: if listp(nRow) then first(nRow) + 1 else nRow + 1,
+    if nextRow > n then return([]),
+    nList: makelist(i, i, 1, n),
+    result: map(lambda([x], [nextRow, x]), nList),
+    return(result)
+);
+
+mismaColumna(cell1, cell2) := block(
+    if cell1 = [] then return(false),
+    if cell1[1][2] = cell2[2] then return(true),
+    return(mismaColumna(rest(cell1), cell2)) 
+);
+
+mismaFila(cell1, cell2) := block(
+    if cell1 = [] then return(false),
+    if first(first(cell1)) = first(cell2) then return(true),
+    return(mismaFila(rest(cell1), cell2))
+);
+
+mismaDiagonal(cell1, cell2) := block(
+    if cell1 = [] then return(false),
+    if abs(cell1[1][1] - cell2[1]) = abs(cell1[1][2] - cell2[2]) then return(true),
+    return(mismaDiagonal(rest(cell1), cell2)) 
+);
+
+extender(size, route) := block(
+    [vecinos, result],
+    if route = [] then
+        vecinos: makelist([1, i], i, 1, size)
+    else
+        vecinos: vecinos(size, last(route)),
+    result: extenderAux(route, vecinos),
+    return(result)
+);
+
+
+extenderAux(route1, vecinos) := block(
+    [result: []],
+    if vecinos = [] then return([]),  
+    if route1 = [] or (
+        not mismaColumna(route1, first(vecinos)) and 
+        not mismaDiagonal(route1, first(vecinos)) and 
+        not mismaFila(route1, first(vecinos))
+    ) then (
+        result: cons(append(route1, [first(vecinos)]), extenderAux(route1, rest(vecinos)))
+    ) else
+        result: extenderAux(route1, rest(vecinos)),
+    return(result)  
+);
+
+
+filaInicial(size) := block(
+    result: makelist([1, i], i, 1, size),
+    return(result)
+);
+
+prof(size):=block(
+    result:[],
+    firstRow:filaInicial(size),
+    if size=1 then 
+	 return([[1,1]])
+    else(
+        result:profAux(firstRow,size)
+    ),
+    return(result)
+);
+
+profAux(firstRow, size) := block(
+    ruta1: [],
+    ruta: [],
+    ruta2: [],
+    if firstRow = [] then return([]),
+    ruta1: first(firstRow),
+    
+    if listp(ruta1[1]) then (
+        if length(ruta1) = size then return(ruta1)
+    ) else (
+        if length([ruta1]) = size then return(ruta1)
+    ),
+
+    if listp(ruta1[1]) then 
+        ruta: extender(size, ruta1)
+    else 
+        ruta: extender(size, [ruta1]),
+
+    ruta2: append(ruta, rest(firstRow)),
+    
+
+    return(profAux(ruta2, size))
+);
+
+
+profTodas(size) := block(
+    [firstRow: filaInicial(size), result],
+    if size = 1 then 
+        return([[1,1]])
+    else if size = 2 then 
+        return([])
+    else (
+        result: profTodasAux(firstRow, size, [])
+    ),
+    return(result)
+);
+
+
+profTodasAux(firstRow, size, result) := block(
+    [rutaN, nuevosVecinos],
+    if firstRow = [] then return(result),
+    rutaN: first(firstRow),
+    if length(rutaN) = size then 
+        result: append(result, [rutaN]),
+    nuevosVecinos: if listp(rutaN[1]) then 
+        extender(size, rutaN) 
+    else 
+        extender(size, [rutaN]),
+    return(profTodasAux(append(nuevosVecinos, rest(firstRow)), size, result))
+);

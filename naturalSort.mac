@@ -1,0 +1,117 @@
+/*
+Gabriel Solano Coronado 2019033687  
+Emily Sánchez Orozco 2021067314
+*/
+
+
+merge(lista1, lista2) := block(
+    result: [],
+    if lista1 = [] then return(lista2),
+    if lista2 = [] then return(lista1),
+    x: first(lista1),
+    y: first(lista2),
+    if x <= y then (
+        result: cons(x, merge(rest(lista1), lista2))  
+    ) else (
+        result: cons(y, merge(lista1, rest(lista2)))  
+    ),
+    return(result)
+);
+
+natural(lista) := block(
+    [result: [], temp: [], i],
+    temp: [first(lista)], 
+    for i: 2 thru length(lista) do (
+        if lista[i] >= lista[i-1] then (
+            temp: append(temp, [lista[i]])
+        ) else (
+            result: append(result, [temp]),
+            temp: [lista[i]]
+        )
+    ),
+    result: append(result, [temp]),
+    return(result)
+);
+
+
+
+naturalSort(lista):=block(
+	newList:natural(lista),
+	result:[],
+	counter: length(newList)-1,
+	push(first(newList),result),
+	newList:rest(newList),
+	while counter>0 do (
+		result: [merge(first(result),first(newList))],
+		newList: rest(newList),
+		counter:counter-1
+	),
+	 return(result)
+);
+
+/*
+Calculo de la eficiencia de los programas
+
+*/
+
+/*
+
+merge(lista1, lista2) := block(
+    result: [],...........................................1
+    if lista1 = [] then return(lista2),...................1
+    if lista2 = [] then return(lista1),...................1
+    x: first(lista1),.....................................1
+    y: first(lista2),.....................................1
+    if x <= y then (......................................1
+        result: cons(x, merge(rest(lista1), lista2))..(n-1)
+    )
+	else (................................................1
+        result: cons(y, merge(lista1, rest(lista2)))..(n-1)
+    ),
+    return(result).......................................1
+);
+
+T(0)=1
+T(n)=(n-1)+6
+T(n) = n+5
+O(n)
+
+
+
+natural(lista) := block(
+    [result: [], temp: [], i],...........................................1
+    temp: [first(lista)],  ..............................................1
+    for i: 2 thru length(lista) do (.....................................n
+        if lista[i] >= lista[i-1] then (...........................1
+            temp: append(temp, [lista[i]])...................1
+        ) else (...................................................1
+            result: append(result, [temp]),..................1
+            temp: [lista[i]].................................1
+    ),
+    result: append(result, [temp]),......................................1
+    return(result).......................................................1
+);
+
+
+T(0)=1
+T(n)=1+1+1+1+n
+T(n)=n 
+O(n)
+
+naturalSort(lista):=block(
+	newList:natural(lista),...........................................n
+	result:[],........................................................1
+	counter: length(newList)-1,.......................................1
+	push(first(newList),result),......................................1
+	newList:rest(newList),............................................1
+	while counter>0 do (..............................................(n-1)*n
+		result: [merge(first(result),first(newList))],..........n
+		newList: rest(newList),.................................1
+		counter:counter-1.......................................1
+	),
+	 return(result)..................................................1
+);
+T(0)=1
+T(n)=n+1+1+1+1+n^2-n
+O(n^2)
+*/
